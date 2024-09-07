@@ -1,0 +1,17 @@
+image: maven:3-jdk-8
+
+before_script:
+  - export ANT_VERSION=1.9.7
+  - wget -q http://www.us.apache.org/dist/ant/binaries/apache-ant-${ANT_VERSION}-bin.tar.gz
+  - tar -xzf apache-ant-${ANT_VERSION}-bin.tar.gz
+  - rm apache-ant-${ANT_VERSION}-bin.tar.gz
+  - export ANT_HOME=${PWD}/apache-ant-${ANT_VERSION}
+  - export PATH=${PATH}:${ANT_HOME}/bin
+  - rm etc/sample-0.1.tar.bz2
+
+build:
+  script: ant compile dist
+
+test:
+  script:
+    - ant runtest -Dtest=ParallelAggregateTest && ant runtest -Dtest=ShuffleTest && ant runtest -Dtest=WorkerTest && ant runtest -Dtest=systemtest.ParallelTest
